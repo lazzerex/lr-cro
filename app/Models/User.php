@@ -7,11 +7,13 @@ namespace App\Models;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Models\Contracts\HasAvatar;
 use Filament\Panel;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Storage;
 
 class User extends Authenticatable implements FilamentUser, HasAvatar
 {
@@ -53,6 +55,15 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'locked_at' => 'datetime'
     ];
 
+    /*---------- Attributes ---------- */
+
+    public function isLocked(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->locked_at != null,
+        );
+    }
+
     /*---------- Filament ---------- */
     public function canAccessPanel(Panel $panel): bool
     {
@@ -61,6 +72,17 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
 
     public function getFilamentAvatarUrl(): ?string
     {
-        return $this->avatar_url;
+        return $this->avatar_url ? Storage::url($this->avatar_url) : null;
+    }
+
+    /*---------- Methods ---------- */
+    public function getAvatarUrl()
+    {
+        return $this->avatar_url ? Storage::url($this->avatar_url) : 'https://ui-avatars.com/api/?name=' . $this->name;
+    }
+
+    public function isMasterAdmin()
+    {
+        return in_array($this->id, config('site.master_admin_id'));
     }
 }

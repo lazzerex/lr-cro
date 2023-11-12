@@ -9,4 +9,9 @@ use Spatie\Permission\Models\Role as SpatieRole;
 class Role extends SpatieRole
 {
     use HasFactory;
+
+    public function isMasterAdmin()
+    {
+        return $this->id === config('site.master_admin_role_id');
+    }
 }
