@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoleResource\Pages;
 use App\Filament\Resources\RoleResource\RelationManagers;
-use App\Forms\Components\CheckboxListGroup;
+use App\Filament\Forms\Components\CheckboxListGroup;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Services\PermissionService;
