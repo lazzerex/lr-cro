@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->string('name');
             $table->string('slug')->unique();
-            $table->text('description')->default('');
+            $table->text('description')->nullable();
             $table->unsignedInteger('count')->default(0);
             $table->integer('display_order')->default(0);
             $table->timestamps();
