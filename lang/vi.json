@@ -8,6 +8,7 @@
 
     "Created at": "Ngày tạo",
     "Updated at": "Ngày cập nhật",
+    "Published at": "Ngày xuất bản",
 
     "The :attribute has already been taken.": "Trường :attribute đã có trong cơ sở dữ liệu.",
 
@@ -33,5 +34,12 @@
     "Portfolio": "Dự án",
     "Portfolio Tag": "Tag dự án",
     "portfolio tag": "tag dự án",
-    "Portfolio tag": "Tag dự án"
+    "Portfolio tag": "Tag dự án",
+
+    "Title": "Tiêu đề",
+    "Slug": "Đường dẫn tĩnh",
+    "Excerpt": "Tóm tắt",
+    "Content": "Nội dung",
+    "Author name": "Tên tác giả",
+    "Description": "Mô tả"
 }

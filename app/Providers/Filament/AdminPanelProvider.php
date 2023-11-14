@@ -29,6 +29,12 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->colors([
                 'primary' => Color::Teal,
+                'danger' => Color::Rose,
+                'gray' => Color::Gray,
+                'info' => Color::Blue,
+                'success' => Color::Emerald,
+                'warning' => Color::Orange,
+                'indigo' => Color::Indigo,
             ])
             ->font('Mulish')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
@@ -57,7 +63,9 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->maxContentWidth('full')
             ->sidebarCollapsibleOnDesktop()
+            ->sidebarWidth('16rem')
             ->viteTheme('resources/css/filament/admin/theme.css')
+
             ;
     }
 }

@@ -60,12 +60,8 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, Permission> $children
  * @property-read int|null $children_count
  * @property-read Permission|null $parent
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
- * @property-read int|null $permissions_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
  * @property-read int|null $roles_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
- * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder|Permission newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Permission newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Permission permission($permissions, $without = false)
@@ -87,10 +83,49 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\PortfolioTag
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property \App\Models\Enums\TagTypes|null $type
+ * @property int|null $display_order
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|PortfolioTag newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PortfolioTag newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag portfolioTags()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag postTags()
+ * @method static \Illuminate\Database\Eloquent\Builder|PortfolioTag query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PortfolioTag whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PortfolioTag whereDisplayOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PortfolioTag whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PortfolioTag whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PortfolioTag whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PortfolioTag whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PortfolioTag whereUpdatedAt($value)
+ */
+	class PortfolioTag extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Portofilo
+ *
+ * @method static \Database\Factories\PortofiloFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder|Portofilo newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Portofilo newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Portofilo query()
+ */
+	class Portofilo extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Post
  *
  * @property int $id
- * @property int $author
+ * @property int $author_id
  * @property string $title
  * @property string $slug
  * @property string $excerpt
@@ -101,13 +136,16 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon $published_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User $author
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Category> $categories
  * @property-read int|null $categories_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\PostTag> $tags
+ * @property-read int|null $tags_count
  * @method static \Database\Factories\PostFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Post newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Post newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Post query()
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereAuthor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereAuthorId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereCommentCount($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereCommentStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereContent($value)
@@ -125,6 +163,35 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\PostTag
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $slug
+ * @property \App\Models\Enums\TagTypes|null $type
+ * @property int|null $display_order
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Post> $posts
+ * @property-read int|null $posts_count
+ * @method static \Illuminate\Database\Eloquent\Builder|PostTag newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PostTag newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag portfolioTags()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag postTags()
+ * @method static \Illuminate\Database\Eloquent\Builder|PostTag query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PostTag whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PostTag whereDisplayOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PostTag whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PostTag whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PostTag whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PostTag whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PostTag whereUpdatedAt($value)
+ */
+	class PostTag extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Role
  *
  * @property int $id
@@ -134,8 +201,6 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
  * @property-read int|null $permissions_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
- * @property-read int|null $users_count
  * @method static \Database\Factories\RoleFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|Role newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Role newQuery()
@@ -164,6 +229,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag portfolioTags()
+ * @method static \Illuminate\Database\Eloquent\Builder|Tag postTags()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag query()
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Tag whereDisplayOrder($value)
@@ -191,14 +258,6 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
- * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
- * @property-read int|null $permissions_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Role> $roles
- * @property-read int|null $roles_count
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
- * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()

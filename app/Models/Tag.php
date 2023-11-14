@@ -6,6 +6,7 @@ use App\Models\Enums\TagTypes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Parental\HasChildren;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -31,6 +32,9 @@ class Tag extends Model
         'post-tag' => PostTag::class,
         'portfolio-tag' => PortfolioTag::class,
     ];
+
+    /*---------- Relationships ---------- */
+
 
     /*---------- Scopes ---------- */
 
