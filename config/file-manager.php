@@ -25,7 +25,7 @@ return [
      * LFM Route prefix
      * !!! WARNING - if you change it, you should compile frontend with new prefix(baseUrl) !!!
      */
-    'routePrefix'       => 'file-manager',
+    'routePrefix'       => 'admin/file-manager',
 
     /**
      * List of disk names that you want to use
@@ -170,5 +170,5 @@ return [
      * Enable slugification of filenames of uploaded files.
      *
      */
-    'slugifyNames'      => false,
+    'slugifyNames'      => true,
 ];
