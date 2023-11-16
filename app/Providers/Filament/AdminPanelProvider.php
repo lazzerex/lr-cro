@@ -65,7 +65,9 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarCollapsibleOnDesktop()
             ->sidebarWidth('16rem')
             ->viteTheme('resources/css/filament/admin/theme.css')
-
+            ->favicon(asset('images/favico.png'))
+            ->brandLogo(asset('images/logo-cro.png'))
+            ->brandLogoHeight('3rem');
             ;
     }
 }
