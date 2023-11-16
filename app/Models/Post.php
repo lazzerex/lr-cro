@@ -27,6 +27,7 @@ class Post extends Model
         'comment_status',
         'comment_count',
         'published_at',
+        'image'
     ];
 
     protected $casts = [

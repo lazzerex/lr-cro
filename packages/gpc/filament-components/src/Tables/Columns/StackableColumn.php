@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Filament\Tables\Columns;
+namespace Gpc\FilamentComponents\Tables\Columns;
 
 use Closure;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Columns\Layout\Component;
-use Filament\Tables\Columns\Layout\View;
 
 class StackableColumn extends Column
 {
-    protected string $view = 'filament.tables.columns.stackable-column';
+    protected string $view = 'gpc-filament-components::tables.stackable-column';
 
     protected array | Closure $components = [];
 

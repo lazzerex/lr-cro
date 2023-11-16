@@ -31,9 +31,10 @@
 
     // Add callback to file manager
     fm.$store.commit('fm/setFileCallBack', function(fileUrl) {
-      //window.opener.fmSetLink(fileUrl);
+      var url = new URL(fileUrl);
+      var path = url.pathname;
       window.opener.dispatchEvent(new CustomEvent("file-selected", {
-        detail: { url: fileUrl }
+        detail: { url: fileUrl, path: path }
       }));
       window.close();
     });

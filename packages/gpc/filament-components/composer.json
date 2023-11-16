@@ -1,0 +1,19 @@
+{
+    "name": "gpc/filament-components",
+    "version": "1.0.0",
+    "description": "Components for filament",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Gpc\\FilamentComponents\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Gpc\\FilamentComponents\\FilamentComponentsServiceProvider"
+            ]
+        }
+    },
+    "require": {}
+}

@@ -16,6 +16,9 @@ use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Gpc\FilamentComponents\Forms\Components\ImagePicker;
+use Gpc\FilamentComponents\Forms\Components\TinyMceEditor;
+use Gpc\FilamentComponents\Tables\Columns\StackableColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\HtmlString;
@@ -32,7 +35,7 @@ class PostResource extends Resource
     {
         return $form
             ->schema([
-                Grid::make(['md' => 4])
+                Grid::make(['md' => 6])
                     ->schema([
                         Group::make([
                             Tabs::make()
@@ -45,7 +48,7 @@ class PostResource extends Resource
                                             Forms\Components\Textarea::make('excerpt')
                                                 ->default('')
                                                 ->columnSpanFull(),
-                                            TinyEditor::make('content')
+                                            TinyMceEditor::make('content')
                                                 ->default('')
                                                 ->showMenuBar()
                                                 ->columnSpanFull(),
@@ -56,7 +59,7 @@ class PostResource extends Resource
                                         ])
 
                                 ]),
-                        ])->columnSpan(3),
+                        ])->columnSpan(4),
                         Group::make([
                             Section::make('Thông tin')
                                 ->schema([
@@ -73,8 +76,13 @@ class PostResource extends Resource
                                         ->seconds(false)
                                         ->native(false)
                                         ->prefixIcon('heroicon-o-clock'),
+                                ]),
+                            Section::make(__('Hình đại diện'))
+                                ->schema([
+                                    ImagePicker::make('image')
+                                        ->hiddenLabel(),
                                 ])
-                        ]),
+                        ])->columnSpan(2),
                     ]),
 
                 // Forms\Components\Select::make('tags')
@@ -102,6 +110,13 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
+
+                StackableColumn::make('title')
+                    ->components([
+                        Tables\Columns\TextColumn::make('title'),
+                        Tables\Columns\TextColumn::make('status')
+                            ->badge(),
+                    ]),
                 Tables\Columns\TextColumn::make('author.name'),
                 Tables\Columns\TextColumn::make('tags.name')
                     ->badge()
