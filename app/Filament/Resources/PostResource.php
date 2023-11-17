@@ -101,10 +101,9 @@ class PostResource extends Resource
                                         ->visibleOn('edit'),
 
                                     Forms\Components\DateTimePicker::make('published_at')
-                                        ->format('Y/m/d H:i')
-                                        ->displayFormat('d/m/Y H:i')
                                         ->seconds(false)
                                         ->native(false)
+                                        ->default(now())
                                         ->prefixIcon('heroicon-o-clock')
                                         ->columnSpanFull(),
 
@@ -142,15 +141,15 @@ class PostResource extends Resource
                 Tables\Columns\TextColumn::make('creator.name')
                     ->label(__('Tác giả')),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTimeDMY()
+                    ->dateTime()
                     ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('published_at')
-                    ->dateTimeDMY()
+                    ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTimeDMY()
+                    ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->modifyQueryUsing(fn (Builder $query) => $query->tableList())
