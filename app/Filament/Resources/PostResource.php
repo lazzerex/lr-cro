@@ -142,15 +142,15 @@ class PostResource extends Resource
                 Tables\Columns\TextColumn::make('creator.name')
                     ->label(__('Tác giả')),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d/m/Y H:i')
+                    ->dateTimeDMY()
                     ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('published_at')
-                    ->dateTime('d/m/Y H:i')
+                    ->dateTimeDMY()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('d/m/Y H:i')
+                    ->dateTimeDMY()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->modifyQueryUsing(fn (Builder $query) => $query->tableList())
