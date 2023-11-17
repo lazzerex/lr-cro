@@ -21,15 +21,28 @@ use Gpc\FilamentComponents\Forms\Components\ImagePicker;
 use Gpc\FilamentComponents\Forms\Components\SEOInputs;
 use Gpc\FilamentComponents\Forms\Components\TinyMceEditor;
 use Gpc\FilamentComponents\Tables\Columns\StackableColumn;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
-use RalphJSmit\Filament\SEO\SEO;
+use Illuminate\Database\Eloquent\Builder;
 
 class PostResource extends Resource
 {
     protected static ?string $model = Post::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-newspaper';
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Bài viết');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Bài viết');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('bài viết');
+    }
 
     public static function form(Form $form): Form
     {
@@ -62,22 +75,34 @@ class PostResource extends Resource
                         Group::make([
                             Section::make('Thông tin')
                                 ->schema([
-                                    Forms\Components\Select::make('author_id')
-                                        ->relationship("author", 'name')
+                                    Forms\Components\Select::make('created_by')
+                                        ->relationship("creator", 'name')
                                         ->default(auth()->user()->id),
                                     Forms\Components\Placeholder::make('created_at')
                                         ->content(function (Post $record) {
-                                            return __('Created at').': '.$record->created_at->format('d/m/Y');
+                                            return $record->created_at->formatDateTimeDMY();
                                         })
-                                        ->hiddenLabel()
                                         ->visibleOn('edit'),
+
+                                    Forms\Components\Placeholder::make('updated_by')
+                                        ->content(function (Post $record) {
+                                            return $record->editor->name;
+                                        })
+                                        ->visibleOn('edit'),
+                                    Forms\Components\Placeholder::make('updated_at')
+                                        ->content(function (Post $record) {
+                                            return $record->updated_at->formatDateTimeDMY();
+                                        })
+                                        ->visibleOn('edit'),
+
                                     Forms\Components\DateTimePicker::make('published_at')
                                         ->format('Y/m/d H:i')
                                         ->displayFormat('d/m/Y H:i')
                                         ->seconds(false)
                                         ->native(false)
-                                        ->prefixIcon('heroicon-o-clock'),
-                                ]),
+                                        ->prefixIcon('heroicon-o-clock')
+                                        ->columnSpanFull(),
+                                ])->columns(['lg' => 2]),
                             Section::make(__('Hình đại diện'))
                                 ->schema([
                                     ImagePicker::make('image')
@@ -85,25 +110,6 @@ class PostResource extends Resource
                                 ])
                         ])->columnSpan(2),
                     ]),
-
-                // Forms\Components\Select::make('tags')
-                //     ->relationship('tags', 'name')
-                //     ->multiple(),
-
-                // Forms\Components\TextInput::make('status')
-                //     ->required()
-                //     ->maxLength(20)
-                //     ->default('publish'),
-                // Forms\Components\TextInput::make('comment_status')
-                //     ->required()
-                //     ->maxLength(20)
-                //     ->default('open'),
-                // Forms\Components\TextInput::make('comment_count')
-                //     ->required()
-                //     ->numeric()
-                //     ->default(0),
-                // Forms\Components\DateTimePicker::make('published_at')
-                //     ->required(),
             ]);
     }
 
@@ -111,37 +117,27 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-
-                StackableColumn::make('title')
-                    ->components([
-                        Tables\Columns\TextColumn::make('title'),
-                        Tables\Columns\TextColumn::make('status')
-                            ->badge(),
-                    ]),
-                Tables\Columns\TextColumn::make('author.name'),
-                Tables\Columns\TextColumn::make('tags.name')
-                    ->badge()
-                    ->color(Color::Indigo)
-                    ->limitList(1),
+                Tables\Columns\TextColumn::make('id'),
+                Tables\Columns\TextColumn::make('title')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('comment_status')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('comment_count')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('published_at')
-                    ->dateTime()
-                    ->sortable(),
+                    ->badge(),
+                Tables\Columns\TextColumn::make('creator.name')
+                    ->label(__('Tác giả')),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
+                    ->dateTime('d/m/Y')
+                    ->sortable()
+                    ->toggleable(),
+                Tables\Columns\TextColumn::make('published_at')
+                    ->dateTime('d/m/Y')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
+                    ->dateTime('d/m/Y')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
+            ->modifyQueryUsing(fn (Builder $query) => $query->tableList())
+            ->defaultSort('id', 'desc')
             ->filters([
                 //
             ])

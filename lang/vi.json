@@ -9,6 +9,8 @@
     "Created at": "Ngày tạo",
     "Updated at": "Ngày cập nhật",
     "Published at": "Ngày xuất bản",
+    "Creator": "Người tạo",
+    "Updated by": "Người cập nhật",
 
     "The :attribute has already been taken.": "Trường :attribute đã có trong cơ sở dữ liệu.",
 

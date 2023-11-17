@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasUserstamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Illuminate\Database\Eloquent\Builder;
 use Kodeine\Metable\Metable;
 use RalphJSmit\Laravel\SEO\Support\HasSEO;
 use Spatie\Sluggable\HasSlug;
@@ -17,8 +19,8 @@ class Post extends Model
 {
     use HasFactory;
     use HasSlug;
-    use HasSEO;
     use Metable;
+    use HasUserstamps;
 
     protected $fillable = [
         'author_id',
@@ -30,7 +32,8 @@ class Post extends Model
         'comment_status',
         'comment_count',
         'published_at',
-        'image'
+        'image',
+        'gallery',
     ];
 
     protected $casts = [
@@ -50,11 +53,6 @@ class Post extends Model
 
     /*---------- Relationships ---------- */
 
-    public function author(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'author_id');
-    }
-
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'post_category')
@@ -66,10 +64,28 @@ class Post extends Model
         return $this->morphToMany(PostTag::class, 'taggable');
     }
 
-    // public function metas(): HasMany
-    // {
-    //     return $this->hasMany(PostMeta::class);
-    // }
+    /*---------- Scopes ---------- */
+
+    public function scopeTableList(Builder $query)
+    {
+        return $query->select([
+            'id',
+            'title',
+            'slug',
+            'status',
+            'created_by',
+            'created_at',
+            'updated_by',
+            'updated_at',
+            'published_by',
+            'published_at',
+        ]);
+    }
+
+    public function scopeLatestId(Builder $query)
+    {
+        return $query->orderBy('id', 'desc');
+    }
 
     /*---------- Methods ---------- */
 

@@ -20,14 +20,17 @@ class PostFactory extends Factory
     {
         $title = fake()->words(4, true);
         $slug = Str::slug($title);
+        $creator = User::inRandomOrder()->first()->id;
 
         return [
-            'author' => User::inRandomOrder()->first()->id,
             'title' => Str::ucfirst($title),
             'slug' => $slug,
             'excerpt' => fake()->paragraph(3),
             'content' => fake()->paragraphs(9, true),
             'published_at' => now(),
+            'created_by' => $creator,
+            'updated_by' => $creator,
+            'published_by' => $creator,
         ];
     }
 }

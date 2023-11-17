@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('author_id')->constrained('users');
             $table->text('title');
             $table->text('slug')->unique();
             $table->text('excerpt');
@@ -21,8 +20,14 @@ return new class extends Migration
             $table->string('status', 20)->default('publish')->index();
             $table->string('comment_status', 20)->default('open');
             $table->integer('comment_count')->default(0);
+            $table->string('image')->nullable();
+            $table->json('gallery')->nullable();
+            $table->foreignId('created_by')->constrained('users');
+            $table->foreignId('updated_by')->constrained('users');
+            $table->foreignId('published_by')->constrained('users');
             $table->timestamp('published_at');
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('post_category', function (Blueprint $table) {

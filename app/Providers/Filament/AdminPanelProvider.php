@@ -5,6 +5,7 @@ namespace App\Providers\Filament;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -36,7 +37,7 @@ class AdminPanelProvider extends PanelProvider
                 'warning' => Color::Orange,
                 'indigo' => Color::Indigo,
             ])
-            ->font('Mulish')
+            ->font('Open Sans')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -67,7 +68,11 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->favicon(asset('images/favico.png'))
             ->brandLogo(asset('images/logo-cro.png'))
-            ->brandLogoHeight('3rem');
-            ;
+            ->brandLogoHeight('3rem')
+            ->navigationGroups([
+                'Bài viết',
+                'Dự án',
+                'Phân quyền',
+            ]);
     }
 }
