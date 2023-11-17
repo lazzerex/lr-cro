@@ -12,7 +12,7 @@ trait HasUserstamps
 {
     protected $userstamps = true;
 
-    public static function bootUserstamps()
+    public static function bootHasUserstamps()
     {
         static::creating(function ($model) {
             $user = Auth::user();

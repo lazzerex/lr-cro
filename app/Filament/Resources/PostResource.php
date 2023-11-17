@@ -3,6 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
+use App\Models\Enums\PostStatus;
 use App\Models\Post;
 use App\Models\PostMeta;
 use Filament\Forms;
@@ -15,6 +16,7 @@ use Filament\Forms\Form;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Gpc\FilamentComponents\Forms\Components\ImagePicker;
@@ -60,6 +62,7 @@ class PostResource extends Resource
                                             Forms\Components\TextInput::make('slug'),
                                             Forms\Components\Textarea::make('excerpt')
                                                 ->default('')
+                                                ->rows(3)
                                                 ->columnSpanFull(),
                                             TinyMceEditor::make('content')
                                                 ->default('')
@@ -75,9 +78,11 @@ class PostResource extends Resource
                         Group::make([
                             Section::make('Thông tin')
                                 ->schema([
-                                    Forms\Components\Select::make('created_by')
-                                        ->relationship("creator", 'name')
-                                        ->default(auth()->user()->id),
+                                    Forms\Components\Placeholder::make('created_by')
+                                        ->content(function (Post $record) {
+                                            return $record->creator->name;
+                                        })
+                                        ->visibleOn('edit'),
                                     Forms\Components\Placeholder::make('created_at')
                                         ->content(function (Post $record) {
                                             return $record->created_at->formatDateTimeDMY();
@@ -102,6 +107,15 @@ class PostResource extends Resource
                                         ->native(false)
                                         ->prefixIcon('heroicon-o-clock')
                                         ->columnSpanFull(),
+
+                                    Forms\Components\Select::make('status')
+                                        ->options(PostStatus::class)
+                                        ->columnSpanFull(),
+
+                                    Forms\Components\Textarea::make('note')
+                                        ->rows(4)
+                                        ->columnSpanFull(),
+
                                 ])->columns(['lg' => 2]),
                             Section::make(__('Hình đại diện'))
                                 ->schema([
@@ -119,21 +133,24 @@ class PostResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('id'),
                 Tables\Columns\TextColumn::make('title')
-                    ->searchable(),
+                    ->searchable()
+                    ->tooltip(fn (Post $record): string => $record->note ?? '')
+                    ->icon(fn (Post $record): string => $record->note ? 'heroicon-o-chat-bubble-left-ellipsis' : '')
+                    ->iconPosition(IconPosition::After),
                 Tables\Columns\TextColumn::make('status')
                     ->badge(),
                 Tables\Columns\TextColumn::make('creator.name')
                     ->label(__('Tác giả')),
                 Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime('d/m/Y')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(),
                 Tables\Columns\TextColumn::make('published_at')
-                    ->dateTime('d/m/Y')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime('d/m/Y')
+                    ->dateTime('d/m/Y H:i')
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->modifyQueryUsing(fn (Builder $query) => $query->tableList())

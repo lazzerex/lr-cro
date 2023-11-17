@@ -9,7 +9,7 @@
     "Created at": "Ngày tạo",
     "Updated at": "Ngày cập nhật",
     "Published at": "Ngày xuất bản",
-    "Creator": "Người tạo",
+    "Created by": "Người tạo",
     "Updated by": "Người cập nhật",
 
     "The :attribute has already been taken.": "Trường :attribute đã có trong cơ sở dữ liệu.",
@@ -43,5 +43,14 @@
     "Excerpt": "Tóm tắt",
     "Content": "Nội dung",
     "Author name": "Tên tác giả",
-    "Description": "Mô tả"
+    "Description": "Mô tả",
+    "Note": "Ghi chú",
+    "Status": "Tình trạng",
+
+    "Draft": "Nháp",
+    "Publish": "Xuất bản",
+    "Reject": "Không duyệt",
+    "Add Media": "Thêm hình",
+    "Change Media": "Đổi hình",
+    "Clear Media": "Xoá hình"
 }

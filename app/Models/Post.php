@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Enums\PostStatus;
 use App\Models\Traits\HasUserstamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,10 +35,12 @@ class Post extends Model
         'published_at',
         'image',
         'gallery',
+        'note',
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
+        'status' => PostStatus::class,
     ];
 
     protected $disableFluentMeta = true;
@@ -48,6 +51,7 @@ class Post extends Model
             if (is_null($post->published_at)) {
                 $post->published_at = now();
             }
+            $post->published_by = auth()->user()->id;
         });
     }
 
@@ -79,6 +83,7 @@ class Post extends Model
             'updated_at',
             'published_by',
             'published_at',
+            'note',
         ]);
     }
 
