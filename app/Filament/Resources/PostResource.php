@@ -3,8 +3,8 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
-use App\Filament\Resources\PostResource\RelationManagers;
 use App\Models\Post;
+use App\Models\PostMeta;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
@@ -12,17 +12,17 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Form;
+use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Gpc\FilamentComponents\Forms\Components\ImagePicker;
+use Gpc\FilamentComponents\Forms\Components\SEOInputs;
 use Gpc\FilamentComponents\Forms\Components\TinyMceEditor;
 use Gpc\FilamentComponents\Tables\Columns\StackableColumn;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Illuminate\Support\HtmlString;
-use Mohamedsabil83\FilamentFormsTinyeditor\Components\TinyEditor;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use RalphJSmit\Filament\SEO\SEO;
 
 class PostResource extends Resource
@@ -55,21 +55,22 @@ class PostResource extends Resource
                                         ])->columns(['md' => 2]),
                                     Tab::make('SEO')
                                         ->schema([
-                                            SEO::make()
-                                        ])
-
+                                            SEOInputs::make()
+                                        ]),
                                 ]),
                         ])->columnSpan(4),
                         Group::make([
                             Section::make('Thông tin')
                                 ->schema([
                                     Forms\Components\Select::make('author_id')
-                                        ->relationship("author", 'name'),
+                                        ->relationship("author", 'name')
+                                        ->default(auth()->user()->id),
                                     Forms\Components\Placeholder::make('created_at')
                                         ->content(function (Post $record) {
                                             return __('Created at').': '.$record->created_at->format('d/m/Y');
                                         })
-                                        ->hiddenLabel(),
+                                        ->hiddenLabel()
+                                        ->visibleOn('edit'),
                                     Forms\Components\DateTimePicker::make('published_at')
                                         ->format('Y/m/d H:i')
                                         ->displayFormat('d/m/Y H:i')

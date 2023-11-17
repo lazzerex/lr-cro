@@ -6,7 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
+use Kodeine\Metable\Metable;
 use RalphJSmit\Laravel\SEO\Support\HasSEO;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -16,6 +18,7 @@ class Post extends Model
     use HasFactory;
     use HasSlug;
     use HasSEO;
+    use Metable;
 
     protected $fillable = [
         'author_id',
@@ -34,6 +37,17 @@ class Post extends Model
         'published_at' => 'datetime',
     ];
 
+    protected $disableFluentMeta = true;
+
+    protected static function booted(): void
+    {
+        static::creating(function (Post $post) {
+            if (is_null($post->published_at)) {
+                $post->published_at = now();
+            }
+        });
+    }
+
     /*---------- Relationships ---------- */
 
     public function author(): BelongsTo
@@ -51,6 +65,11 @@ class Post extends Model
     {
         return $this->morphToMany(PostTag::class, 'taggable');
     }
+
+    // public function metas(): HasMany
+    // {
+    //     return $this->hasMany(PostMeta::class);
+    // }
 
     /*---------- Methods ---------- */
 
