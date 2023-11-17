@@ -28,13 +28,15 @@
   document.addEventListener('DOMContentLoaded', function() {
     // set fm height
     document.getElementById('fm-main-block').setAttribute('style', 'height:' + window.innerHeight + 'px');
+    const searchParams = new URLSearchParams(window.location.search);
 
     // Add callback to file manager
     fm.$store.commit('fm/setFileCallBack', function(fileUrl) {
       var url = new URL(fileUrl);
       var path = url.pathname;
+      var target = searchParams.get('target');
       window.opener.dispatchEvent(new CustomEvent("file-selected", {
-        detail: { url: fileUrl, path: path }
+        detail: { url: fileUrl, path: path, target: target }
       }));
       window.close();
     });

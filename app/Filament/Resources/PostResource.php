@@ -77,7 +77,8 @@ class PostResource extends Resource
                                         ->schema([
                                             Forms\Components\Repeater::make('gallery')
                                                 ->schema([
-                                                    ImagePicker::make('image'),
+                                                    ImagePicker::make('image')
+                                                        ->previewWidth('100px'),
                                                     Forms\Components\TextInput::make('caption'),
                                                 ])
                                                 ->columns(2)
