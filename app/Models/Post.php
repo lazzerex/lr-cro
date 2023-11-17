@@ -41,6 +41,7 @@ class Post extends Model
     protected $casts = [
         'published_at' => 'datetime',
         'status' => PostStatus::class,
+        'gallery' => 'array',
     ];
 
     protected $disableFluentMeta = true;

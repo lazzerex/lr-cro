@@ -73,6 +73,15 @@ class PostResource extends Resource
                                         ->schema([
                                             SEOInputs::make()
                                         ]),
+                                    Tab::make('Gallery')
+                                        ->schema([
+                                            Forms\Components\Repeater::make('gallery')
+                                                ->schema([
+                                                    ImagePicker::make('image'),
+                                                    Forms\Components\TextInput::make('caption'),
+                                                ])
+                                                ->columns(2)
+                                        ])
                                 ]),
                         ])->columnSpan(4),
                         Group::make([
