@@ -170,6 +170,7 @@ return [
         App\Providers\Filament\AdminPanelProvider::class,
         App\Providers\RouteServiceProvider::class,
         //App\Providers\TelescopeServiceProvider::class,
+        App\Providers\MacroServiceProvider::class,
         App\Providers\MyFilamentServiceProvider::class,
     ])->toArray(),
 
