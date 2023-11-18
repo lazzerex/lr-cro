@@ -6,13 +6,10 @@ use App\Models\Enums\PostStatus;
 use App\Models\Traits\HasUserstamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Builder;
 use Kodeine\Metable\Metable;
-use RalphJSmit\Laravel\SEO\Support\HasSEO;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -36,12 +33,14 @@ class Post extends Model
         'image',
         'gallery',
         'note',
+        'seo'
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
         'status' => PostStatus::class,
         'gallery' => 'array',
+        'seo' => 'json'
     ];
 
     protected $disableFluentMeta = true;

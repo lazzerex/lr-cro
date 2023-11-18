@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
 use App\Models\Portofilo;
 use App\Models\Post;
 use App\Models\Role;
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
             'role' => Role::class,
             'post' => Post::class,
             'portfolio' => Portofilo::class,
+            'category' => Category::class,
         ]);
     }
 }

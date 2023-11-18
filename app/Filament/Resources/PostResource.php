@@ -6,6 +6,7 @@ use App\Filament\Resources\PostResource\Pages;
 use App\Models\Enums\PostStatus;
 use App\Models\Post;
 use App\Models\PostMeta;
+use App\Models\ValueObjects\PostOptions;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
@@ -24,6 +25,8 @@ use Gpc\FilamentComponents\Forms\Components\SEOInputs;
 use Gpc\FilamentComponents\Forms\Components\TinyMceEditor;
 use Gpc\FilamentComponents\Tables\Columns\StackableColumn;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use RalphJSmit\Filament\SEO\SEO;
 
 class PostResource extends Resource
 {
@@ -71,7 +74,7 @@ class PostResource extends Resource
                                         ])->columns(['md' => 2]),
                                     Tab::make('SEO')
                                         ->schema([
-                                            SEOInputs::make()
+                                            SEOInputs::make(),
                                         ]),
                                     Tab::make('Gallery')
                                         ->schema([
@@ -82,7 +85,7 @@ class PostResource extends Resource
                                                     Forms\Components\TextInput::make('caption'),
                                                 ])
                                                 ->columns(2)
-                                        ])
+                                            ]),
                                 ]),
                         ])->columnSpan(4),
                         Group::make([
@@ -130,7 +133,8 @@ class PostResource extends Resource
                                 ->schema([
                                     ImagePicker::make('image')
                                         ->hiddenLabel(),
-                                ])
+                                ]),
+
                         ])->columnSpan(2),
                     ]),
             ]);
