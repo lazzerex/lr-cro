@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use Filament\FontProviders\GoogleFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -37,7 +38,12 @@ class AdminPanelProvider extends PanelProvider
                 'warning' => Color::Orange,
                 'indigo' => Color::Indigo,
             ])
-            ->font('Open Sans')
+            //->font('Mulish')
+            //->font('Lexend Deca', url: 'https://fonts.bunny.net/css?family=lexend-deca:300,400,500,600&display=swap')
+            // ->font(
+            //     'Be Vietnam Pro',
+            //     url: 'https://fonts.bunny.net/css?family=be-vietnam-pro:300,400,500,600,700&display=swap'
+            // )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
