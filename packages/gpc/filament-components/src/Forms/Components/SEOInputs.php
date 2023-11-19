@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
 class SEOInputs
 {
     public static function make(
-        string $statePath = 'seo',
+        string $statePath = 'seo_data',
         string $titleField = 'title',
         string $descriptionField = 'excerpt'): Group
     {
@@ -27,7 +27,7 @@ class SEOInputs
                 ->tabs([
                     Tab::make('Meta tags')
                         ->schema([
-                            Forms\Components\TextInput::make('title')
+                            Forms\Components\TextInput::make('meta_title')
                                 ->label(__('Meta title'))
                                 ->hint(function ($state, $livewire) use ($titleField, $titleMaxLength) {
                                     $length = 0;
@@ -46,8 +46,8 @@ class SEOInputs
                                     'data-placeholder' => $titleField,
                                     'data-max-length' => $titleMaxLength,
                                 ]),
-                            Forms\Components\TextInput::make('keyword'),
-                            Forms\Components\Textarea::make('description')
+                            Forms\Components\TextInput::make('meta_keyword'),
+                            Forms\Components\Textarea::make('meta_description')
                                 ->rows(4)
                                 ->label(__('Meta description'))
                                 ->hint(function ($state, $livewire) use ($descriptionField, $descriptionMaxLength) {

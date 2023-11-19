@@ -2,19 +2,31 @@
 <ul>
     <li>{{ $post->id }}</li>
     <li>{{ $post->title }}</li>
-    @if($post->gallery)
-        @foreach($post->gallery as $item)
+    @if($post->gallery_data)
+        @foreach($post->gallery_data as $item)
         <li>
             <ul>
-                <li>{{ $item['image'] }}</li>
-                <li>{{ $item['caption'] }}</li>
+                <li>{{ Arr::get($item, 'image') }}</li>
+                <li>{{ Arr::get($item, 'caption') }}</li>
             </ul>
         </li>
         @endforeach
     @endif
-    @php
-        print_r($post->seo)
-    @endphp
+    <li>
+        <pre>
+        @php
+            print_r($post->seo);
+        @endphp
+        </pre>
+
+    </li>
+    <li>
+    <pre>
+        @php
+            print_r($post->gallery);
+        @endphp
+        </pre>
+    </li>
     {{-- @if($post->options)
         <li>
             <ul>

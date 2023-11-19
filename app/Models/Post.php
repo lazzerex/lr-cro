@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Models\Enums\PostStatus;
+use App\Models\Traits\HasGallery;
+use App\Models\Traits\HasJsonColumns;
+use App\Models\Traits\HasSEO;
 use App\Models\Traits\HasUserstamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,8 +20,10 @@ class Post extends Model
 {
     use HasFactory;
     use HasSlug;
-    use Metable;
     use HasUserstamps;
+    use HasJsonColumns;
+    use HasSEO;
+    use HasGallery;
 
     protected $fillable = [
         'author_id',
@@ -31,16 +36,16 @@ class Post extends Model
         'comment_count',
         'published_at',
         'image',
-        'gallery',
+        'gallery_data',
         'note',
-        'seo'
+        'seo_data'
     ];
 
     protected $casts = [
         'published_at' => 'datetime',
         'status' => PostStatus::class,
-        'gallery' => 'array',
-        'seo' => 'json'
+        'gallery_data' => 'array',
+        'seo_data' => 'json'
     ];
 
     protected $disableFluentMeta = true;

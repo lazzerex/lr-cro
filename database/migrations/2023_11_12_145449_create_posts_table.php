@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('comment_status', 20)->default('open');
             $table->integer('comment_count')->default(0);
             $table->string('image')->nullable();
-            $table->json('gallery')->nullable();
-            $table->json('seo')->nullable();
+            $table->json('gallery_data')->nullable();
+            $table->json('seo_data')->nullable();
             $table->text('note')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');

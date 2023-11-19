@@ -20,6 +20,7 @@ use Filament\Support\Colors\Color;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Table;
+use Gpc\FilamentComponents\Forms\Components\GalleryRepeater;
 use Gpc\FilamentComponents\Forms\Components\ImagePicker;
 use Gpc\FilamentComponents\Forms\Components\SEOInputs;
 use Gpc\FilamentComponents\Forms\Components\TinyMceEditor;
@@ -78,14 +79,8 @@ class PostResource extends Resource
                                         ]),
                                     Tab::make('Gallery')
                                         ->schema([
-                                            Forms\Components\Repeater::make('gallery')
-                                                ->schema([
-                                                    ImagePicker::make('image')
-                                                        ->previewWidth('100px'),
-                                                    Forms\Components\TextInput::make('caption'),
-                                                ])
-                                                ->columns(2)
-                                            ]),
+                                            GalleryRepeater::make('gallery_data', 'Hình ảnh'),
+                                        ]),
                                 ]),
                         ])->columnSpan(4),
                         Group::make([
