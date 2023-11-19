@@ -31,6 +31,7 @@ use Gpc\FilamentComponents\Forms\Components\TinyMceEditor;
 use Gpc\FilamentComponents\Tables\Columns\StackableColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use RalphJSmit\Filament\SEO\SEO;
 
 class PostResource extends Resource
@@ -80,6 +81,7 @@ class PostResource extends Resource
                                     Tab::make('Phân loại')
                                         ->schema([
                                             Fieldset::make('Categories')
+                                                ->id('selectCategories')
                                                 ->schema([
                                                     SelectTree::make('categories')
                                                         ->relationship('categories', 'name', 'parent_id')
@@ -96,7 +98,11 @@ class PostResource extends Resource
                                                             $record->categories()->sync($categories->all());
                                                         }),
                                                     Forms\Components\Select::make('primary_category')
-                                                        ->options(fn() => Category::query()->pluck('name', 'id')),
+                                                        ->options(fn() => Category::query()->pluck('name', 'id'))
+                                                        ->extraAttributes([
+                                                            'class' => 'primary-category',
+                                                        ])
+                                                        ->disableOptionWhen(fn (int $value, Get $get): bool => !in_array($value, $get('categories'))),
                                                 ]),
 
                                             Forms\Components\Select::make('tags')

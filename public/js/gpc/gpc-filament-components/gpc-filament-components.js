@@ -52,4 +52,31 @@ class SEOInputHandler
     }
 }
 
+class SelectTreeExtension
+{
+    init() {
+        let _this = this;
+        document.addEventListener('livewire:initialized', function () {
+            const categoryFieldset = document.querySelector('#selectCategories');
+            if (! categoryFieldset) return;
+
+            let tree = categoryFieldset.querySelector('[x-ref="tree"]');
+            let primarySelect = categoryFieldset.querySelector('.primary-category');
+            tree.addEventListener('input', function (e) {
+                let selected = e.detail;
+                primarySelect.querySelectorAll("option").forEach(opt => {
+                    let value = parseInt(opt.value)
+                    console.log(selected, value, selected.includes(value));
+                    if (! selected.includes(value)) {
+                        opt.disabled = true;
+                    } else {
+                        opt.disabled = false;
+                    }
+                });
+            });
+        });
+    }
+}
+
 (new SEOInputHandler()).init();
+(new SelectTreeExtension()).init();
