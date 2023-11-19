@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SettingsController;
 use App\Models\Post;
 use Gpc\FilamentComponents\Greetr;
 use Illuminate\Support\Facades\Route;
@@ -39,3 +40,5 @@ Route::get('/posts/{id}', function ($id) {
         'post' => $post,
     ]);
 });
+
+Route::get('/settings', SettingsController::class);
