@@ -38,7 +38,8 @@ class Post extends Model
         'image',
         'gallery_data',
         'note',
-        'seo_data'
+        'seo_data',
+        'category_id',
     ];
 
     protected $casts = [

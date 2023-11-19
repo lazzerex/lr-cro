@@ -24,6 +24,7 @@ return new class extends Migration
             $table->json('gallery_data')->nullable();
             $table->json('seo_data')->nullable();
             $table->text('note')->nullable();
+            $table->unsignedBigInteger('category_id')->nullable();
             $table->foreignId('created_by')->constrained('users');
             $table->foreignId('updated_by')->constrained('users');
             $table->foreignId('published_by')->constrained('users');

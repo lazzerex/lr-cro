@@ -82,34 +82,21 @@ class PostResource extends Resource
                                         ->schema([
                                             Fieldset::make('Categories')
                                                 ->id('selectCategories')
+                                                ->extraAttributes(['class' => 'select-categories'])
                                                 ->schema([
                                                     SelectTree::make('categories')
                                                         ->relationship('categories', 'name', 'parent_id')
                                                         ->enableBranchNode()
-                                                        ->defaultOpenLevel(2)
-                                                        ->saveRelationshipsUsing(function (Model $record, Get $get, $state) {
-                                                            $primaryCategory = $get('primary_category');
-                                                            if (blank($state)) return;
-
-                                                            $categories = collect($state)->mapWithKeys(function ($item, $key) use ($primaryCategory) {
-                                                                return [$item => ['is_primary' => $item == $primaryCategory]];
-                                                            });
-
-                                                            $record->categories()->sync($categories->all());
-                                                        }),
-                                                    Forms\Components\Select::make('primary_category')
+                                                        ->defaultOpenLevel(2),
+                                                    Forms\Components\Select::make('category_id')
                                                         ->options(fn($record) => $record->categories->pluck('name', 'id'))
-                                                        //->options([])
-                                                        ->extraInputAttributes(function ($record) {
-                                                            $primaryCategory = $record->categories->where('pivot.is_primary', true)->first();
-
-                                                            $primaryId = $primaryCategory ? $primaryCategory->id : 0;
-                                                            return [
-                                                                'class' => 'primary-category',
-                                                                'data-primary' => $primaryId
-                                                            ];
-                                                        })
-                                                        //->extraInputAttributes([ 'class' => 'primary-category', ]),
+                                                        // ->options(fn($record) => Category::query()
+                                                        //     ->select('categories.id', 'categories.name')
+                                                        //     ->join('post_category', 'categories.id', '=', 'post_category.category_id')
+                                                        //     ->where('post_category.post_id', $record->id)
+                                                        //     ->pluck('name', 'id')
+                                                        // )
+                                                        ->extraInputAttributes([ 'class' => 'primary-category', ]),
                                                 ]),
 
                                             Forms\Components\Select::make('tags')
@@ -154,7 +141,6 @@ class PostResource extends Resource
                                     Forms\Components\DateTimePicker::make('published_at')
                                         ->seconds(false)
                                         ->native(false)
-                                        ->default(now())
                                         ->prefixIcon('heroicon-o-clock')
                                         ->columnSpanFull(),
 
