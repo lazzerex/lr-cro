@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,6 +24,7 @@ class MacroServiceProvider extends ServiceProvider
     {
         $this->registerCarbonMacros();
         $this->registerFilamentMacros();
+        $this->registerArrayMacros();
     }
 
     private function registerCarbonMacros()
@@ -80,6 +82,25 @@ class MacroServiceProvider extends ServiceProvider
 
         TextColumn::macro('dateTimeISO', function () {
             return $this->dateTime('Y-m-d H:i');
+        });
+    }
+
+    private function registerArrayMacros()
+    {
+        Arr::macro('whereRecursive', function ($array, callable $callback) {
+            foreach ($array as &$value)
+            {
+                if (is_array($value))
+                {
+                    $value = $callback === null ? Arr::whereRecursive($value) : Arr::whereRecursive($value, $callback);
+                }
+            }
+
+            return $callback === null ? array_filter($array) : array_filter($array, $callback);
+        });
+
+        Arr::macro('whereNotNullRecursive', function ($array) {
+            return Arr::whereRecursive($array, fn ($value) => ! is_null($value));
         });
     }
 }
