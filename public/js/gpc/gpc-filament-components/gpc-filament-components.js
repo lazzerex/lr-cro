@@ -62,17 +62,37 @@ class SelectTreeExtension
 
             let tree = categoryFieldset.querySelector('[x-ref="tree"]');
             let primarySelect = categoryFieldset.querySelector('.primary-category');
+
+            let primaryId = primarySelect.dataset.primary;
+            primarySelect.value = primaryId;
+
             tree.addEventListener('input', function (e) {
                 let selected = e.detail;
-                primarySelect.querySelectorAll("option").forEach(opt => {
-                    let value = parseInt(opt.value)
-                    console.log(selected, value, selected.includes(value));
-                    if (! selected.includes(value)) {
-                        opt.disabled = true;
-                    } else {
-                        opt.disabled = false;
+                let primaryId = primarySelect.value;
+                primarySelect.querySelectorAll('option:not(:first-child)').forEach(item => item.remove() );
+
+                selected.forEach(function (item) {
+                    let selectedElement = tree.querySelector('.treeselect-input__tags-element[tag-id="' + item + '"]');
+
+                    let label = selectedElement.getAttribute('title');
+                    var element = document.createElement("option");
+                    element.innerText = label;
+                    element.value = item;
+                    if (item == primaryId) {
+                        element.selected = true;
                     }
+                    primarySelect.appendChild(element);
                 });
+
+                // primarySelect.querySelectorAll("option").forEach(opt => {
+                //     let value = parseInt(opt.value)
+                //     console.log(selected, value, selected.includes(value));
+                //     if (! selected.includes(value)) {
+                //         opt.disabled = true;
+                //     } else {
+                //         opt.disabled = false;
+                //     }
+                // });
             });
         });
     }

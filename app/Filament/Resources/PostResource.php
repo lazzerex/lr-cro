@@ -89,7 +89,7 @@ class PostResource extends Resource
                                                         ->defaultOpenLevel(2)
                                                         ->saveRelationshipsUsing(function (Model $record, Get $get, $state) {
                                                             $primaryCategory = $get('primary_category');
-                                                            if (! $primaryCategory || blank($state)) return;
+                                                            if (blank($state)) return;
 
                                                             $categories = collect($state)->mapWithKeys(function ($item, $key) use ($primaryCategory) {
                                                                 return [$item => ['is_primary' => $item == $primaryCategory]];
@@ -98,11 +98,18 @@ class PostResource extends Resource
                                                             $record->categories()->sync($categories->all());
                                                         }),
                                                     Forms\Components\Select::make('primary_category')
-                                                        ->options(fn() => Category::query()->pluck('name', 'id'))
-                                                        ->extraAttributes([
-                                                            'class' => 'primary-category',
-                                                        ])
-                                                        ->disableOptionWhen(fn (int $value, Get $get): bool => !in_array($value, $get('categories'))),
+                                                        ->options(fn($record) => $record->categories->pluck('name', 'id'))
+                                                        //->options([])
+                                                        ->extraInputAttributes(function ($record) {
+                                                            $primaryCategory = $record->categories->where('pivot.is_primary', true)->first();
+
+                                                            $primaryId = $primaryCategory ? $primaryCategory->id : 0;
+                                                            return [
+                                                                'class' => 'primary-category',
+                                                                'data-primary' => $primaryId
+                                                            ];
+                                                        })
+                                                        //->extraInputAttributes([ 'class' => 'primary-category', ]),
                                                 ]),
 
                                             Forms\Components\Select::make('tags')
