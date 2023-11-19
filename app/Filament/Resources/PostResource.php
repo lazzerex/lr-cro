@@ -7,6 +7,7 @@ use App\Models\Enums\PostStatus;
 use App\Models\Post;
 use App\Models\PostMeta;
 use App\Models\ValueObjects\PostOptions;
+use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
@@ -73,6 +74,18 @@ class PostResource extends Resource
                                                 ->showMenuBar()
                                                 ->columnSpanFull(),
                                         ])->columns(['md' => 2]),
+                                    Tab::make('Phân loại')
+                                        ->schema([
+                                            SelectTree::make('categories')
+                                                ->relationship('categories', 'name', 'parent_id', function ($query) {
+                                                    return $query;
+                                                })
+                                                ->enableBranchNode()
+                                                ->defaultOpenLevel(2),
+                                            Forms\Components\Select::make('tags')
+                                                ->relationship('tags', 'name')
+                                                ->multiple(),
+                                        ]),
                                     Tab::make('SEO')
                                         ->schema([
                                             SEOInputs::make(),
