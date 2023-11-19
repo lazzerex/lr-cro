@@ -3,18 +3,21 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PostResource\Pages;
+use App\Models\Category;
 use App\Models\Enums\PostStatus;
 use App\Models\Post;
 use App\Models\PostMeta;
 use App\Models\ValueObjects\PostOptions;
 use CodeWithDennis\FilamentSelectTree\SelectTree;
 use Filament\Forms;
+use Filament\Forms\Components\Fieldset;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
@@ -76,12 +79,26 @@ class PostResource extends Resource
                                         ])->columns(['md' => 2]),
                                     Tab::make('Phân loại')
                                         ->schema([
-                                            SelectTree::make('categories')
-                                                ->relationship('categories', 'name', 'parent_id', function ($query) {
-                                                    return $query;
-                                                })
-                                                ->enableBranchNode()
-                                                ->defaultOpenLevel(2),
+                                            Fieldset::make('Categories')
+                                                ->schema([
+                                                    SelectTree::make('categories')
+                                                        ->relationship('categories', 'name', 'parent_id')
+                                                        ->enableBranchNode()
+                                                        ->defaultOpenLevel(2)
+                                                        ->saveRelationshipsUsing(function (Model $record, Get $get, $state) {
+                                                            $primaryCategory = $get('primary_category');
+                                                            if (! $primaryCategory || blank($state)) return;
+
+                                                            $categories = collect($state)->mapWithKeys(function ($item, $key) use ($primaryCategory) {
+                                                                return [$item => ['is_primary' => $item == $primaryCategory]];
+                                                            });
+
+                                                            $record->categories()->sync($categories->all());
+                                                        }),
+                                                    Forms\Components\Select::make('primary_category')
+                                                        ->options(fn() => Category::query()->pluck('name', 'id')),
+                                                ]),
+
                                             Forms\Components\Select::make('tags')
                                                 ->relationship('tags', 'name')
                                                 ->multiple(),
