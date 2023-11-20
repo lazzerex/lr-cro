@@ -4,15 +4,15 @@ namespace App\Settings;
 
 use Spatie\LaravelSettings\Settings;
 
-class GeneralSettings extends Settings
+class GeneralOptions extends Settings
 {
     public string $site_name;
 
-    public array $test_array;
+    public string $site_email;
 
-    public array $test_json;
+    public ?string $site_logo;
 
-    public string $site_brand;
+    public ?string $site_icon;
 
     public static function group(): string
     {

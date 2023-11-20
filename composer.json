@@ -11,6 +11,7 @@
         "php": "^8.1",
         "alexusmai/laravel-file-manager": "^3.0",
         "awcodes/filament-badgeable-column": "^2.2",
+        "aymanalhattami/filament-page-with-sidebar": "^2.4",
         "codewithdennis/filament-select-tree": "^3.1",
         "filament/filament": "^3.0-stable",
         "filament/spatie-laravel-settings-plugin": "^3.0-stable",
