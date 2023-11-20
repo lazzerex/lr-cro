@@ -6,7 +6,9 @@ use Filament\FontProviders\GoogleFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationBuilder;
 use Filament\Navigation\NavigationGroup;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages;
 use Filament\Panel;
 use Filament\PanelProvider;
@@ -18,6 +20,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Str;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 
 class AdminPanelProvider extends PanelProvider
@@ -79,6 +82,15 @@ class AdminPanelProvider extends PanelProvider
                 'Bài viết',
                 'Dự án',
                 'Phân quyền',
+                'Hệ thống'
+            ])
+            ->navigationItems([
+                NavigationItem::make('Log hệ thống')
+                    ->icon('heroicon-o-clipboard-document-list')
+                    ->url(fn (): string => Str::start(config('log-viewer.route_path'), '/'))
+                    ->group('Hệ thống')
+                    ->sort(99)
+                    ->visible(fn() => auth()->user()->isMasterAdmin()),
             ]);
     }
 }
