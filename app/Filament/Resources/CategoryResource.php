@@ -5,9 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CategoryResource\Pages;
 use App\Filament\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
-use App\Filament\Tables\Columns\StackableColumn;
 use Filament\Forms;
-use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -47,26 +45,20 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                Section::make(__('Thông tin chuyên mục'))
-                    ->schema([
-                        Forms\Components\TextInput::make('name')
-                            ->required()
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('slug')
-                            ->maxLength(255),
-                        Forms\Components\Select::make('parent_id')
-                            ->relationship('parent', 'name'),
-                        Forms\Components\TextInput::make('display_order')
-                            ->required()
-                            ->numeric()
-                            ->default(0),
-                        Forms\Components\Textarea::make('description')
-                            ->maxLength(65535)
-                            ->default('')
-                            ->columnSpanFull(),
-
-                    ])
-                    ->columns(['md' => 2])
+                Forms\Components\TextInput::make('name')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('slug')
+                    ->maxLength(255),
+                Forms\Components\Select::make('parent_id')
+                    ->relationship('parent', 'name'),
+                Forms\Components\TextInput::make('display_order')
+                    ->required()
+                    ->numeric()
+                    ->default(0),
+                Forms\Components\Textarea::make('description')
+                    ->maxLength(65535)
+                    ->columnSpanFull(),
             ]);
     }
 
@@ -120,19 +112,10 @@ class CategoryResource extends Resource
             ]);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-            //
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            'create' => Pages\CreateCategory::route('/create'),
-            'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ManageCategories::route('/'),
         ];
     }
 }

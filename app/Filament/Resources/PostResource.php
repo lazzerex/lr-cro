@@ -101,10 +101,10 @@ class PostResource extends Resource
                                         ->schema([
                                             SEOInputs::make(),
                                         ]),
-                                    Tab::make('Gallery')
-                                        ->schema([
-                                            GalleryRepeater::make('gallery_data', 'Hình ảnh'),
-                                        ]),
+                                    // Tab::make('Gallery')
+                                    //     ->schema([
+                                    //         GalleryRepeater::make('gallery_data', 'Hình ảnh'),
+                                    //     ]),
                                 ]),
                         ])->columnSpan(4),
                         Group::make([
