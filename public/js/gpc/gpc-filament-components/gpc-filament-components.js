@@ -64,9 +64,6 @@ class SelectTreeExtension
                 let tree = elem.querySelector('[x-ref="tree"]');
                 let primarySelect = elem.querySelector('.primary-category');
 
-                // let primaryId = primarySelect.dataset.primary;
-                // primarySelect.value = primaryId;
-
                 tree.addEventListener('input', function (e) {
                     let selected = e.detail;
                     let primaryId = primarySelect.value;

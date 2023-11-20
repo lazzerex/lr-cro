@@ -26,6 +26,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Gpc\FilamentComponents\Forms\Components\GalleryRepeater;
 use Gpc\FilamentComponents\Forms\Components\ImagePicker;
+use Gpc\FilamentComponents\Forms\Components\SelectCategories;
 use Gpc\FilamentComponents\Forms\Components\SEOInputs;
 use Gpc\FilamentComponents\Forms\Components\TinyMceEditor;
 use Gpc\FilamentComponents\Tables\Columns\StackableColumn;
@@ -80,28 +81,21 @@ class PostResource extends Resource
                                         ])->columns(['md' => 2]),
                                     Tab::make('Phân loại')
                                         ->schema([
-                                            Fieldset::make('Categories')
-                                                ->id('selectCategories')
-                                                ->extraAttributes(['class' => 'select-categories'])
-                                                ->schema([
-                                                    SelectTree::make('categories')
-                                                        ->relationship('categories', 'name', 'parent_id')
-                                                        ->enableBranchNode()
-                                                        ->defaultOpenLevel(2),
-                                                    Forms\Components\Select::make('category_id')
-                                                        ->options(fn($record) => $record->categories->pluck('name', 'id'))
-                                                        // ->options(fn($record) => Category::query()
-                                                        //     ->select('categories.id', 'categories.name')
-                                                        //     ->join('post_category', 'categories.id', '=', 'post_category.category_id')
-                                                        //     ->where('post_category.post_id', $record->id)
-                                                        //     ->pluck('name', 'id')
-                                                        // )
-                                                        ->extraInputAttributes([ 'class' => 'primary-category', ]),
-                                                ]),
+                                            SelectCategories::make()
+                                                ->label(__('Chuyên mục'))
+                                                ->primaryIdLabel(__('Chuyên mục chính'))
+                                                ->primaryIdAttribute('category_id')
+                                                ->primaryIdOptions(fn($record) => $record->categories->pluck('name', 'id'))
+                                                ->relationship('categories', 'name', 'parent_id')
+                                                ->build(),
 
                                             Forms\Components\Select::make('tags')
                                                 ->relationship('tags', 'name')
-                                                ->multiple(),
+                                                ->multiple()
+                                                ->createOptionForm([
+                                                    Forms\Components\TextInput::make('name')
+                                                        ->required(),
+                                                ]),
                                         ]),
                                     Tab::make('SEO')
                                         ->schema([
