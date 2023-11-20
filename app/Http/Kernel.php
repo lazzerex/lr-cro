@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
 
         'view-logs' => \App\Http\Middleware\ViewLogs::class,
+        'view-filemanager' => \App\Http\Middleware\ViewFileManager::class,
     ];
 }

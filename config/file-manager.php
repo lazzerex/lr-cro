@@ -2,6 +2,8 @@
 
 use Alexusmai\LaravelFileManager\Services\ConfigService\DefaultConfigRepository;
 use Alexusmai\LaravelFileManager\Services\ACLService\ConfigACLRepository;
+use Filament\Http\Middleware\Authenticate;
+use Illuminate\Session\Middleware\AuthenticateSession;
 
 return [
 
@@ -103,7 +105,10 @@ return [
      * Add your middleware name to array -> ['web', 'auth', 'admin']
      * !!!! RESTRICT ACCESS FOR NON ADMIN USERS !!!!
      */
-    'middleware'        => ['web'],
+    'middleware'        => [
+        'web',
+        'view-filemanager'
+    ],
 
     /***************************************************************************
      * ACL mechanism ON/OFF
