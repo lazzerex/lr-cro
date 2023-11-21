@@ -16,10 +16,12 @@ class GenerateMenus
     public function handle(Request $request, Closure $next): Response
     {
         \Menu::make('MainMenu', function ($menu) {
-            $menu->add('Home');
-            $menu->add('About', 'about');
-            $menu->add('Services', 'services');
-            $menu->add('Contact', 'contact');
+            $menu->add('Trang chủ', ['route' => 'home']);
+            $menu->add('Quản trị', ['route' => ['category', 'category' => 'quan-tri']]);
+            $menu->add('Marketing', ['route' => ['category', 'category' => 'marketing']]);
+            $menu->add('CRM', ['route' => ['category', 'category' => 'crm']]);
+            $menu->add('Bán hàng', ['route' => ['category', 'category' => 'ban-hang']]);
+            $menu->add('Công nghệ', ['route' => ['category', 'category' => 'cong-nghe']]);
         });
 
         return $next($request);
