@@ -7,7 +7,7 @@
 <div class="desktop-nav hidden lg:flex lg:flex-row lg:flex-nowrap lg:items-center lg:justify-between lg:mt-0"
     id="desktop-nav">
     <!-- logo -->
-    <a class="site-logo hidden lg:flex items-center mr-4 text-xl" href="#">
+    <a class="site-logo hidden lg:flex items-center mr-4 text-xl" href="/">
         <h2 class="text-2xl font-semibold text-gray-200">
             <img class="inline-block h-auto mr-2" src="{{ $logo_url }}">
         </h2>

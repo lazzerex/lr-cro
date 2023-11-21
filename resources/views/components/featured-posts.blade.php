@@ -8,12 +8,12 @@
             <!--Start left cover-->
             <div class="flex-shrink max-w-full w-full lg:w-1/2 pb-1 lg:pb-0 lg:pr-1">
                 <div class="relative hover-img h-98 overflow-hidden">
-                    <a href="#" class="block h-full">
+                    <a href="{{ route('post', $firstPost->slug) }}" class="block h-full">
                         <img class="max-w-full w-full mx-auto h-full" src="{{ url($firstPost->image) }}" alt="Image description">
                     </a>
                     <div class="absolute px-5 pt-8 pb-5 bottom-0 w-full bg-gradient-cover">
-                        <a href="#">
-                            <h2 class="text-3xl font-bold capitalize text-white mb-3">{{ $firstPost->title }}</h2>
+                        <a href="{{ route('post', $firstPost->slug) }}">
+                            <h2 class="text-2xl font-bold text-white mb-3">{{ $firstPost->title }}</h2>
                         </a>
                         @if ($firstPost->excerpt)
                         <p class="text-gray-100 hidden sm:inline-block">{{ $firstPost->excerpt }}</p>
@@ -37,13 +37,12 @@
                     @foreach ($posts as $post)
                     <article class="flex-shrink max-w-full w-full sm:w-1/2">
                         <div class="relative hover-img h-48 overflow-hidden">
-                            <a href="#" class="block h-full">
-                                <img class="max-w-full w-full h-full mx-auto object-cover" src="{{ url($post->image) }}"
-                                    alt="Image description">
+                            <a href="{{ route('post', $post->slug) }}" class="block h-full">
+                                <img class="max-w-full w-full h-full mx-auto object-cover" src="{{ url($post->image) }}" />
                             </a>
                             <div class="absolute px-4 pt-7 pb-4 bottom-0 w-full bg-gradient-cover">
-                                <a href="#">
-                                    <h2 class="text-lg font-bold capitalize leading-tight text-white mb-1">{{ $post->title }}</h2>
+                                <a href="{{ route('post', $post->slug) }}">
+                                    <h2 class="text-lg font-bold text-white mb-1">{{ $post->title }}</h2>
                                 </a>
                                 @if ($post->categories->count() > 0)
                                 <div class="pt-1 flex flex-wrap text-sm gap-1">

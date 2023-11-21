@@ -3,6 +3,7 @@
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImportWordPressController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\SettingsController;
 use App\Models\Post;
 use Gpc\FilamentComponents\Greetr;
@@ -21,23 +22,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/chuyen-muc/{category:slug}', CategoryController::class)->name('category');
+Route::get('/{post:slug}', PostController::class)->name('post');
 
-Route::get('/posts', function () {
-    $posts = Post::query()->paginate();
 
-    return view('posts.index', [
-        'posts' => $posts,
-    ]);
-});
-
-Route::get('/posts/{id}', function ($id) {
-    $post = Post::query()->find($id);
-
-    return view('posts.detail', [
-        'post' => $post,
-    ]);
-});
-
-Route::get('/settings', SettingsController::class);
-
-Route::get('/importwp', ImportWordPressController::class);
+//Route::get('/importwp', ImportWordPressController::class);

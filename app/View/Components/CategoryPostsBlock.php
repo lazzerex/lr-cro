@@ -43,7 +43,7 @@ class CategoryPostsBlock extends Component
 
         if (! $category) return '';
 
-        $posts = $category->posts()->latest('id')->limit(5)->get();
+        $posts = $category->posts()->latest('id')->limit(6)->get();
 
         return view('components.category-posts-block', [
             'posts' => $posts,
