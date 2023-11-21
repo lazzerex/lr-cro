@@ -3,7 +3,7 @@
 
 @endphp
 
-    <div class="xl:container mx-auto px-3 sm:px-4 xl:px-2 xl:max-w-6xl py-6"">
+    <div class="xl:container mx-auto px-3 sm:px-4 xl:px-2 xl:max-w-6xl py-6">
         <div class="flex flex-row flex-wrap">
             <!--Start left cover-->
             <div class="flex-shrink max-w-full w-full lg:w-1/2 pb-1 lg:pb-0 lg:pr-1">
