@@ -1,0 +1,53 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*=============================================
+=            Header            =
+=============================================*/
+.main-header {
+    --logo-width: 200px;
+    --logo-mobile-width: 150px;
+    box-shadow: 0px 2px 5px 0px rgba(0,0,0,0.05);
+}
+
+.desktop-nav .site-logo {
+    max-width: var(--logo-width);
+}
+
+.mobile-nav .site-logo {
+    max-width: var(--logo-mobile-width);
+}
+
+/*=============================================
+=            Home            =
+=============================================*/
+/*---------- Featured posts ---------- */
+.box-one > article:nth-child(1) {
+	padding-top: 0;
+	padding-bottom: 0.125rem;
+	padding-right: 0.125rem;
+}
+.box-one > article:nth-child(2) {
+	padding-top: 0;
+	padding-bottom: 0.125rem;
+	padding-left: 0.125rem;
+}
+.box-one > article:nth-child(3) {
+	padding-top: 0.125rem;
+	padding-bottom: 0.125rem;
+	padding-right: 0.125rem;
+}
+.box-one > article:nth-child(4) {
+	padding-top: 0.125rem;
+	padding-bottom: 0.125rem;
+	padding-left: 0.125rem;
+}
+.bg-gradient-cover {
+    background-color: transparent;
+    background-image: linear-gradient(transparent,rgba(0,0,0,0.92));
+}
+.hover-img:hover img {
+    filter: brightness(103%) contrast(103%);
+    opacity:.99;
+}

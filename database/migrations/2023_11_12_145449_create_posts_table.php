@@ -34,10 +34,10 @@ return new class extends Migration
         });
 
         Schema::create('post_category', function (Blueprint $table) {
-            $table->id();
             $table->foreignId('post_id')->constrained()->cascadeOnDelete();
             $table->foreignId('category_id')->constrained()->cascadeOnDelete();
-            $table->boolean('is_primary')->default(0);
+
+            $table->primary(['post_id', 'category_id']);
         });
     }
 

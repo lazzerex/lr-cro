@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Kodeine\Metable\Metable;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -49,6 +50,8 @@ class Post extends Model
         'seo_data' => 'json'
     ];
 
+    protected $appends = ['categoryLinks'];
+
     protected $disableFluentMeta = true;
 
     protected static function booted(): void
@@ -61,12 +64,28 @@ class Post extends Model
         });
     }
 
+    /*---------- Attributes ---------- */
+    // public function categoryNames(): Attribute
+    // {
+    //     return Attribute::make(
+    //         get: fn() => $this->categories->join(', ')
+    //     );
+    // }
+
+    public function getCategoryLinksAttribute()
+    {
+        $categories = $this->categories;
+        $links = $categories->map(function ($item) {
+            return '<a href="'.route('category', $item->slug).'" title="'.$item->name.'">'.$item->name.'</a>';
+        });
+        return $links->join(', ');
+    }
+
     /*---------- Relationships ---------- */
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class, 'post_category')
-            ->withPivot(['id', 'is_primary']);
+        return $this->belongsToMany(Category::class, 'post_category');
     }
 
     public function tags(): MorphToMany
@@ -98,6 +117,11 @@ class Post extends Model
         return $query->orderBy('id', 'desc');
     }
 
+    public function scopeOfCategory(Builder $query, int $id)
+    {
+        return $query->whereRelation('categories', 'id', $id);
+    }
+
     /*---------- Methods ---------- */
 
     public function getSlugOptions() : SlugOptions
@@ -107,4 +131,6 @@ class Post extends Model
             ->saveSlugsTo('slug')
             ->preventOverwrite();
     }
+
+
 }
