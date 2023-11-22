@@ -32,6 +32,7 @@ use Gpc\FilamentComponents\Forms\Components\TinyMceEditor;
 use Gpc\FilamentComponents\Tables\Columns\StackableColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Arr;
 use RalphJSmit\Filament\SEO\SEO;
 
@@ -85,7 +86,7 @@ class PostResource extends Resource
                                                 ->label(__('Chuyên mục'))
                                                 ->primaryIdLabel(__('Chuyên mục chính'))
                                                 ->primaryIdAttribute('category_id')
-                                                ->primaryIdOptions(fn($record) => $record->categories->pluck('name', 'id'))
+                                                ->primaryIdOptions(fn($record) => $record?->categories->pluck('name', 'id'))
                                                 ->relationship('categories', 'name', 'parent_id')
                                                 ->build(),
 
@@ -168,14 +169,29 @@ class PostResource extends Resource
                     ->tooltip(fn (Post $record): string => $record->note ?? '')
                     ->icon(fn (Post $record): string => $record->note ? 'heroicon-o-chat-bubble-left-ellipsis' : '')
                     ->iconPosition(IconPosition::After),
+                Tables\Columns\TextColumn::make('categories.name')
+                    ->badge()
+                    ->color(function ($state, Model $record) {
+                        $primaryCat = $record->categories?->first(function ($item) use ($record) {
+                            return $item->id == $record->category_id;
+                        });
+
+                        $isPrimary = $record->categories->count() == 1 || $state === $primaryCat?->name;
+                        return $isPrimary ? 'primary' : 'gray';
+                    }),
                 Tables\Columns\TextColumn::make('status')
                     ->badge(),
-                Tables\Columns\TextColumn::make('creator.name')
-                    ->label(__('Tác giả')),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(),
+                StackableColumn::make('creator')
+                    ->label(__('Tác giả'))
+                    ->components([
+                        Tables\Columns\TextColumn::make('creator.name')
+                            ->label(__('Tác giả')),
+                        Tables\Columns\TextColumn::make('created_at')
+                            ->dateTime()
+                            ->sortable()
+                            ->toggleable(),
+                    ]),
+
                 Tables\Columns\TextColumn::make('published_at')
                     ->dateTime()
                     ->sortable()
@@ -187,14 +203,21 @@ class PostResource extends Resource
             ->modifyQueryUsing(fn (Builder $query) => $query->tableList())
             ->defaultSort('id', 'desc')
             ->filters([
-                //
+                Tables\Filters\TrashedFilter::make(),
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\ForceDeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
                 ]),
             ]);
     }
@@ -213,5 +236,13 @@ class PostResource extends Resource
             'create' => Pages\CreatePost::route('/create'),
             'edit' => Pages\EditPost::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
     }
 }

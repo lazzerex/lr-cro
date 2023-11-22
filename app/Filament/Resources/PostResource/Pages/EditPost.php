@@ -18,6 +18,8 @@ class EditPost extends EditRecord
                 ->submit(null)
                 ->action('save'),
             Actions\DeleteAction::make(),
+            Actions\ForceDeleteAction::make(),
+            Actions\RestoreAction::make(),
         ];
     }
 

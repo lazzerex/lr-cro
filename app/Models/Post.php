@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Kodeine\Metable\Metable;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
@@ -20,6 +21,7 @@ use Spatie\Sluggable\SlugOptions;
 class Post extends Model
 {
     use HasFactory;
+    use SoftDeletes;
     use HasSlug;
     use HasUserstamps;
     use HasJsonColumns;
@@ -60,7 +62,7 @@ class Post extends Model
             if (is_null($post->published_at)) {
                 $post->published_at = now();
             }
-            $post->published_by = auth()->user()->id;
+            $post->published_by = auth()->id();
         });
     }
 
@@ -97,19 +99,23 @@ class Post extends Model
 
     public function scopeTableList(Builder $query)
     {
-        return $query->select([
-            'id',
-            'title',
-            'slug',
-            'status',
-            'created_by',
-            'created_at',
-            'updated_by',
-            'updated_at',
-            'published_by',
-            'published_at',
-            'note',
-        ]);
+        return $query
+            ->with(['categories', 'creator'])
+            ->select([
+                'id',
+                'title',
+                'slug',
+                'status',
+                'created_by',
+                'created_at',
+                'updated_by',
+                'updated_at',
+                'published_by',
+                'published_at',
+                'note',
+                'deleted_at',
+                'category_id'
+            ]);
     }
 
     public function scopeLatestId(Builder $query)

@@ -22,7 +22,19 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/chuyen-muc/{category:slug}', CategoryController::class)->name('category');
+
+// Route::get('/test', function () {
+//     $posts = Post::query()
+//         ->with('categories')
+//         ->get();
+//     foreach($posts as $post)
+//     {
+//         dd($post);
+//     }
+// });
+
 Route::get('/{post:slug}', PostController::class)->name('post');
 
 
 //Route::get('/importwp', ImportWordPressController::class);
+
