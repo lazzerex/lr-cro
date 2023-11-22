@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout title="Trang chủ">
     <div class="py-8">
         <x-featured-posts />
         <div class="grid lg:grid-cols-3 gap-8 py-6 xl:container mx-auto px-3 sm:px-4 xl:px-2 xl:max-w-6xl">

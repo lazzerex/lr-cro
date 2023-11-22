@@ -1,4 +1,4 @@
-<x-guest-layout>
+<x-guest-layout :title="$post->title">
     <div class="grid lg:grid-cols-3 gap-8 py-6 xl:container mx-auto px-3 sm:px-4 xl:px-2 xl:max-w-6xl">
         <div class="lg:col-span-2">
             <div class="w-full py-3">
