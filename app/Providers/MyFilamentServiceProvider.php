@@ -2,12 +2,15 @@
 
 namespace App\Providers;
 
+use Filament\Facades\Filament;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Field;
 use Filament\Forms\Components\Placeholder;
+use Filament\Support\Assets\Css;
 use Filament\Support\Assets\Js;
 use Filament\Support\Facades\FilamentAsset;
 use Filament\Tables\Columns\Column;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Filters\BaseFilter;
 use Filament\Tables\Table;
 use Illuminate\Support\Facades\App;
@@ -35,6 +38,18 @@ class MyFilamentServiceProvider extends ServiceProvider
         DateTimePicker::$defaultDateDisplayFormat = 'd-m-Y';
         DateTimePicker::$defaultDateTimeDisplayFormat = 'd-m-Y, H:i';
         DateTimePicker::$defaultDateTimeWithSecondsDisplayFormat = 'd-m-Y, H:i:s';
+
+        Column::configureUsing(function (Column $column): void {
+            $column->grow(false);
+        });
+
+        Stack::configureUsing(function (Stack $stack): void {
+            $stack->grow(false);
+        });
+
+        FilamentAsset::register([
+            Css::make('admin', asset('css/admin.css')),
+        ]);
     }
 
     private function autoTranslateLabels()

@@ -1,0 +1,13 @@
+
+.split-column__flex-col .fi-ta-text-item {
+    flex-direction: column;
+}
+
+.column-description-small .fi-ta-text p.text-sm.text-gray-500 {
+    font-size: 12px;
+}
+
+.fi-ta-text-item.text-xs .fi-ta-text-item-icon {
+    width: 1rem;
+    height: 1rem;
+}

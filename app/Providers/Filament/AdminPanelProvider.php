@@ -33,7 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Teal,
+                'primary' => Color::Indigo,
                 'danger' => Color::Rose,
                 'gray' => Color::Gray,
                 'info' => Color::Blue,
@@ -41,12 +41,8 @@ class AdminPanelProvider extends PanelProvider
                 'warning' => Color::Orange,
                 'indigo' => Color::Indigo,
             ])
-            //->font('Mulish')
+            ->font('Mulish')
             //->font('Lexend Deca', url: 'https://fonts.bunny.net/css?family=lexend-deca:300,400,500,600&display=swap')
-            // ->font(
-            //     'Be Vietnam Pro',
-            //     url: 'https://fonts.bunny.net/css?family=be-vietnam-pro:300,400,500,600,700&display=swap'
-            // )
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([

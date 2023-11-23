@@ -21,8 +21,13 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\ActionSize;
 use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Indicator;
 use Filament\Tables\Table;
 use Gpc\FilamentComponents\Forms\Components\GalleryRepeater;
 use Gpc\FilamentComponents\Forms\Components\ImagePicker;
@@ -34,6 +39,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\HtmlString;
 use RalphJSmit\Filament\SEO\SEO;
 
 class PostResource extends Resource
@@ -163,48 +170,101 @@ class PostResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('id'),
-                Tables\Columns\TextColumn::make('title')
-                    ->searchable()
-                    ->tooltip(fn (Post $record): string => $record->note ?? '')
-                    ->icon(fn (Post $record): string => $record->note ? 'heroicon-o-chat-bubble-left-ellipsis' : '')
-                    ->iconPosition(IconPosition::After),
-                Tables\Columns\TextColumn::make('categories.name')
-                    ->badge()
-                    ->color(function ($state, Model $record) {
-                        $primaryCat = $record->categories?->first(function ($item) use ($record) {
-                            return $item->id == $record->category_id;
-                        });
+                Split::make([
+                    Tables\Columns\TextColumn::make('id')
+                        ->sortable()
+                        ->tooltip(fn (Post $record): string => $record->note ?? '')
+                        ->icon(fn (Post $record): string => $record->note ? 'heroicon-o-chat-bubble-left-ellipsis' : '')
+                        ->iconPosition(IconPosition::Before)
+                        ->extraAttributes(['class' => 'split-column__flex-col'], true)
+                        ->grow(false),
 
-                        $isPrimary = $record->categories->count() == 1 || $state === $primaryCat?->name;
-                        return $isPrimary ? 'primary' : 'gray';
-                    }),
-                Tables\Columns\TextColumn::make('status')
-                    ->badge(),
-                StackableColumn::make('creator')
-                    ->label(__('Tác giả'))
-                    ->components([
+                    Stack::make([
+                        Tables\Columns\TextColumn::make('title')
+                            ->searchable()
+                            ->sortable(),
+                        Tables\Columns\TextColumn::make('categories.name')
+                            ->badge()
+                            ->color(function ($state, Model $record) {
+                                $primaryCat = $record->categories?->first(function ($item) use ($record) {
+                                    return $item->id == $record->category_id;
+                                });
+
+                                $isPrimary = $record->categories->count() == 1 || $state === $primaryCat?->name;
+                                return $isPrimary ? 'primary' : 'gray';
+                            }),
+                    ])->space(1)->grow(true),
+
+                    Stack::make([
+                        Tables\Columns\TextColumn::make('status')
+                            ->badge()
+                            ->grow(false),
+                        Tables\Columns\TextColumn::make('published_at')
+                            ->dateTime()
+                            ->icon('heroicon-o-calendar-days')
+                            ->size('xs')
+                    ])->space(1),
+
+                    Stack::make([
                         Tables\Columns\TextColumn::make('creator.name')
-                            ->label(__('Tác giả')),
+                            ->tooltip('Tác giả')
+                            ->icon('heroicon-o-user-circle'),
                         Tables\Columns\TextColumn::make('created_at')
                             ->dateTime()
-                            ->sortable()
-                            ->toggleable(),
-                    ]),
-
-                Tables\Columns\TextColumn::make('published_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                            ->icon('heroicon-o-calendar-days')
+                            ->size('xs')
+                    ])->space(1),
+                ])
+                ->extraAttributes(['class' => 'gap-4 column-description-small'])
+                ->from('md')
             ])
             ->modifyQueryUsing(fn (Builder $query) => $query->tableList())
             ->defaultSort('id', 'desc')
             ->filters([
                 Tables\Filters\TrashedFilter::make(),
-            ])
+                Tables\Filters\SelectFilter::make('categories')
+                    ->relationship('categories', 'name'),
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(PostStatus::class),
+                Tables\Filters\Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('from')
+                            ->label('Ngày tạo từ')
+                            ->native(false),
+                        Forms\Components\DatePicker::make('until')
+                            ->label('Ngày tạo đến')
+                            ->native(false),
+                    ])
+                    ->columns(['md' => 2])
+                    ->columnSpan(2)
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+
+                        if ($data['from'] ?? null) {
+                            $indicators[] = Indicator::make('Ngày tạo từ: ' . Carbon::parse($data['from'])->formatDateDMY())
+                                ->removeField('from');
+                        }
+
+                        if ($data['until'] ?? null) {
+                            $indicators[] = Indicator::make('Ngày tạo đến: ' . Carbon::parse($data['until'])->formatDateDMY())
+                                ->removeField('until');
+                        }
+
+                        return $indicators;
+                    })
+            ], layout: FiltersLayout::AboveContentCollapsible)
+            // ->filtersFormColumns(2)
             ->actions([
                 Tables\Actions\ActionGroup::make([
                     Tables\Actions\EditAction::make(),
@@ -212,6 +272,9 @@ class PostResource extends Resource
                     Tables\Actions\ForceDeleteAction::make(),
                     Tables\Actions\RestoreAction::make(),
                 ])
+                ->button()
+                ->color('gray')
+                ->size(ActionSize::ExtraSmall)
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -244,5 +307,47 @@ class PostResource extends Resource
             ->withoutGlobalScopes([
                 SoftDeletingScope::class,
             ]);
+    }
+
+    private static function getTableSchema()
+    {
+        return [
+            Tables\Columns\TextColumn::make('id'),
+            Tables\Columns\TextColumn::make('title')
+                ->searchable()
+                ->tooltip(fn (Post $record): string => $record->note ?? '')
+                ->icon(fn (Post $record): string => $record->note ? 'heroicon-o-chat-bubble-left-ellipsis' : '')
+                ->iconPosition(IconPosition::After),
+            Tables\Columns\TextColumn::make('categories.name')
+                ->badge()
+                ->color(function ($state, Model $record) {
+                    $primaryCat = $record->categories?->first(function ($item) use ($record) {
+                        return $item->id == $record->category_id;
+                    });
+
+                    $isPrimary = $record->categories->count() == 1 || $state === $primaryCat?->name;
+                    return $isPrimary ? 'primary' : 'gray';
+                }),
+            Tables\Columns\TextColumn::make('status')
+                ->badge(),
+            StackableColumn::make('creator')
+                ->label(__('Tác giả'))
+                ->components([
+                    Tables\Columns\TextColumn::make('creator.name')
+                        ->label(__('Tác giả')),
+                    Tables\Columns\TextColumn::make('created_at')
+                        ->dateTime()
+                        ->sortable()
+                        ->toggleable(),
+                ]),
+
+            Tables\Columns\TextColumn::make('published_at')
+                ->dateTime()
+                ->sortable()
+                ->toggleable(isToggledHiddenByDefault: true),
+            Tables\Columns\TextColumn::make('updated_at')
+                ->dateTime()
+                ->toggleable(isToggledHiddenByDefault: true),
+        ];
     }
 }
